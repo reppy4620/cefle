@@ -54,6 +54,6 @@ class ScoreEstimator(hk.Module):
         x = ConvNextBlock(self.dim, self.dim)(x)
         x = hk.Conv2D(self.channels, kernel_shape=1)(x)
         if self.marginal_prob is not None:
-            # scaled by sigma
+            # scale by sigma
             x = x / self.marginal_prob(x, t)[1][:, None, None, None]
         return x
