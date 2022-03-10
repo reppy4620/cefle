@@ -7,5 +7,12 @@ def test1():
     print(x.dtype, x.shape)
 
 
+def test2():
+    from train import State
+
+    state = State.load('./out/n_0000010.ckpt')
+    print(type(state.params['score_estimator/conv2_d']['b']))
+
+
 if __name__ == '__main__':
-    test1()
+    test2()

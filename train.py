@@ -7,6 +7,7 @@ import optax
 import functools
 import pickle
 
+from pathlib import Path
 from typing import NamedTuple
 from argparse import ArgumentParser
 from tqdm import tqdm
@@ -44,13 +45,23 @@ class State(NamedTuple):
 
     def save(self, path):
         with open(path, 'wb') as f:
-            pickle.dump(self, f)
+            pickle.dump({
+                'step': self.step,
+                'rng': self.rng,
+                'opt_state': self.opt_state,
+                'params': self.params
+            }, f)
 
     @classmethod
     def load(cls, path):
         with open(path, 'rb') as f:
             obj = pickle.load(f)
-        return obj
+        return State(
+            step=obj['step'],
+            rng=obj['rng'],
+            opt_state=obj['opt_state'],
+            params=obj['params']
+        )
 
 
 class Updater:
@@ -92,6 +103,9 @@ def main():
     parser.add_argument('--data_dir', type=str, required=True)
     args = parser.parse_args()
 
+    output_dir = Path(params.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     sde = SubVPSDE()
     net = hk.without_apply_rng(hk.transform(build_forward_fn(sde.marginal_prob)))
     loss_fn = build_loss_fn(sde, net)
@@ -120,7 +134,7 @@ def main():
         bar.set_postfix_str(f'Loss: {loss:.06f}')
 
         if step % params.save_interval == 0:
-            state.save(params.output_dir / f'n_{step:07d}.ckpt')
+            state.save(output_dir / f'n_{step:07d}.ckpt')
 
 
 if __name__ == '__main__':
