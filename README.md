@@ -1,5 +1,6 @@
-# cefle
+cefle
+===
 
-cefle is score based generative modeling for generating anime portraits which is available on danbooru.
+cefle is for my practice of jax and dm-haiku.
 
-This project is powered by jax and haiku!
+This repo contains code of score-based generative model for generating anime portraits.
