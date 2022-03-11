@@ -123,10 +123,14 @@ def main():
     rng, step_rng = jax.random.split(rng)
     t = jax.random.uniform(step_rng, shape=(data.shape[0],))
     state = updater.init(rng, data, t)
+    ckpts = list(sorted(output_dir.glob('*.ckpt')))
+    if len(ckpts) > 0:
+        state = state.load(ckpts[-1])
+        print(f'Loaded {state.step} checkpoint')
 
     print('Starting training loop')
-    bar = tqdm(total=params.n_steps)
-    for step in range(1, params.n_steps+1):
+    bar = tqdm(total=params.n_steps - state.step)
+    for step in range(state.step, params.n_steps+1):
         bar.set_description_str(f'Step: {step}')
         data = next(ds)
         loss, state = updater.update(state, data)

@@ -7,6 +7,17 @@ class SDE:
     def sde(self, x, t):
         pass
 
+    def reverse_sde(self, score, x, t):
+        drift, diffusion = self.sde(x, t)
+        drift = drift - (diffusion ** 2)[:, None, None, None] * score
+        return drift, diffusion
+
+    def probability_flow(self, score, x, t):
+        drift, diffusion = self.sde(x, t)
+        drift = drift - 0.5 * (diffusion ** 2)[:, None, None, None] * score
+        diffusion = jnp.zeros_like(diffusion)
+        return drift, diffusion
+
     @abstractmethod
     def marginal_prob(self, x, t):
         pass
