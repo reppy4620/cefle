@@ -26,7 +26,7 @@ def build_forward_fn(marginal_prob):
 def build_loss_fn(sde: SubVPSDE, net: hk.Transformed):
     def loss_fn(rng: jax.random.PRNGKey, params: hk.Params, data: jnp.ndarray):
         rng, step_rng = jax.random.split(rng)
-        t = jax.random.uniform(step_rng, shape=(data.shape[0],))
+        t = jax.random.uniform(step_rng, shape=(data.shape[0],), minval=1e-5, maxval=1.)
         rng, step_rng = jax.random.split(rng)
         z = jax.random.normal(step_rng, shape=data.shape)
         mean, std = sde.marginal_prob(data, t)
@@ -111,8 +111,8 @@ def main():
     loss_fn = build_loss_fn(sde, net)
 
     opt = optax.chain(
-        optax.clip_by_global_norm(5.0),
-        optax.adam(learning_rate=3e-4, b1=0.9, b2=0.99)
+        optax.clip_by_global_norm(1.0),
+        optax.adam(learning_rate=3e-4, b1=0.9, b2=0.98)
     )
 
     # ds = load_dataset(args.data_dir, batch_size=params.batch_size)
