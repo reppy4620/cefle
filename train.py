@@ -115,8 +115,8 @@ def main():
         optax.adam(learning_rate=3e-4, b1=0.9, b2=0.99)
     )
 
-    ds = load_dataset(args.data_dir, batch_size=params.batch_size)
-    # ds = load_mnist(batch_size=params.batch_size)
+    # ds = load_dataset(args.data_dir, batch_size=params.batch_size)
+    ds = load_mnist(batch_size=params.batch_size)
     updater = Updater(sde, net, loss_fn, opt)
 
     rng = jax.random.PRNGKey(params.seed)
@@ -130,7 +130,7 @@ def main():
         print(f'Loaded {state.step} checkpoint')
 
     print('Starting training loop')
-    bar = tqdm(total=params.n_steps - state.step)
+    bar = tqdm(total=params.n_steps - int(state.step))
     for step in range(state.step, params.n_steps+1):
         bar.set_description_str(f'Step: {step}')
         data = next(ds)

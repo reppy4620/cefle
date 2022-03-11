@@ -12,8 +12,8 @@ class ScoreEstimator(hk.Module):
     def __init__(
         self,
         dim=64,
-        dim_mults=(1, 2, 4, 8),
-        channels=3,
+        dim_mults=(1, 2, 4),
+        channels=1,
         marginal_prob=None
     ):
         super(ScoreEstimator, self).__init__()
