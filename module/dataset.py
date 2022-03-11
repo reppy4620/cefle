@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflow_datasets as tfds
 from pathlib import Path
 from typing import Union
 
@@ -24,4 +25,24 @@ def load_dataset(data_dir: Union[Path, str], batch_size):
     ds = ds.cache()
     ds = ds.repeat()
     ds = ds.batch(batch_size)
+    ds = ds.prefetch(AUTOTUNE)
     return ds.as_numpy_iterator()
+
+
+def load_mnist(batch_size):
+    def preprocess(data):
+        img = data['image']
+        img = tf.cast(img, tf.float32)
+        img = img / 255.
+        return img
+    builder = tfds.builder('mnist')
+    builder.download_and_prepare()
+    ds = builder.as_dataset(split='train', shuffle_files=True)
+    ds = ds.map(preprocess, num_parallel_calls=AUTOTUNE)
+    ds = ds.shuffle(buffer_size=1024)
+    ds = ds.cache()
+    ds = ds.repeat()
+    ds = ds.batch(batch_size)
+    ds = ds.prefetch(AUTOTUNE)
+    return ds.as_numpy_iterator()
+
