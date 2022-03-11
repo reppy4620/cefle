@@ -11,7 +11,7 @@ from module import SubVPSDE
 
 
 def main():
-    img_shape = 256
+    img_shape = 32
     eps = 1e-3
     batch_size = 16
 

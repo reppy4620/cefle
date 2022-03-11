@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 import params
 from module import ScoreEstimator, SDE, SubVPSDE
-from module.dataset import load_dataset, load_mnist
+from module.dataset import load_dataset, load_cifar
 
 
 def build_forward_fn(marginal_prob):
@@ -77,7 +77,7 @@ class Updater:
         params = self.net.init(init_rng, data, t)
         opt_state = self.opt.init(params)
         return State(
-            step=0,
+            step=1,
             rng=out_rng,
             opt_state=opt_state,
             params=params
@@ -116,7 +116,7 @@ def main():
     )
 
     # ds = load_dataset(args.data_dir, batch_size=params.batch_size)
-    ds = load_mnist(batch_size=params.batch_size)
+    ds = load_cifar(batch_size=params.batch_size)
     updater = Updater(sde, net, loss_fn, opt)
 
     rng = jax.random.PRNGKey(params.seed)
@@ -130,7 +130,7 @@ def main():
         print(f'Loaded {state.step} checkpoint')
 
     print('Starting training loop')
-    bar = tqdm(total=params.n_steps - int(state.step))
+    bar = tqdm(total=params.n_steps+1 - int(state.step))
     for step in range(state.step, params.n_steps+1):
         bar.set_description_str(f'Step: {step}')
         data = next(ds)
@@ -138,7 +138,7 @@ def main():
         bar.update()
         bar.set_postfix_str(f'Loss: {loss:.06f}')
 
-        if step % params.save_interval == 0:
+        if (step + 1) % params.save_interval == 0:
             state.save(output_dir / f'n_{step:07d}.ckpt')
 
 
