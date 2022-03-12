@@ -10,7 +10,7 @@ def load_dataset(data_dir: Union[Path, str], batch_size):
     def preprocess(path: str):
         img = tf.io.read_file(path)
         img = tf.image.decode_image(img, channels=3, expand_animations=False, dtype=tf.float32)
-        img = tf.image.resize(img, [128, 128])
+        img = tf.image.resize(img, [256, 256])
         return img
     if isinstance(data_dir, str):
         data_dir = Path(data_dir)
