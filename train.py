@@ -23,7 +23,7 @@ def build_forward_fn(marginal_prob):
     return forward_fn
 
 
-def build_loss_fn(sde: SubVPSDE, net: hk.Transformed):
+def build_loss_fn(sde: SDE, net: hk.Transformed):
     def loss_fn(rng: jax.random.PRNGKey, params: hk.Params, data: jnp.ndarray):
         rng, step_rng = jax.random.split(rng)
         t = jax.random.uniform(step_rng, shape=(data.shape[0],), minval=1e-5, maxval=1.)
