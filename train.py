@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 import params
 from module import ScoreEstimator, SDE, SubVPSDE
-from module.dataset import load_dataset, load_cifar
+from module.dataset import load_dataset, load_tfds
 
 
 def build_forward_fn(marginal_prob):
@@ -115,8 +115,8 @@ def main():
         optax.adam(learning_rate=3e-4, b1=0.9, b2=0.98)
     )
 
-    # ds = load_dataset(args.data_dir, batch_size=params.batch_size)
-    ds = load_cifar(batch_size=params.batch_size)
+    ds = load_dataset(args.data_dir, batch_size=params.batch_size)
+    # ds = load_cifar(batch_size=params.batch_size)
     updater = Updater(sde, net, loss_fn, opt)
 
     rng = jax.random.PRNGKey(params.seed)

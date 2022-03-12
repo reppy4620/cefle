@@ -11,16 +11,16 @@ from module import SubVPSDE
 
 
 def main():
-    img_shape = 32
+    img_shape = 128
     eps = 1e-3
     batch_size = 16
 
-    output_dir = Path('./out/sample')
+    output_dir = Path('out/anime/sampling')
     output_dir.mkdir(parents=True, exist_ok=True)
 
     rng = jax.random.PRNGKey(42)
 
-    ckpt_dir = Path('./out')
+    ckpt_dir = Path('./out/anime')
     last_ckpt = list(sorted(ckpt_dir.glob('*.ckpt')))[-1]
     state = State.load(last_ckpt)
 

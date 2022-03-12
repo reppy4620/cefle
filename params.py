@@ -1,6 +1,6 @@
 seed = 42
-output_dir = './out'
+output_dir = './out/anime'
 save_interval = 10000
 
 n_steps = 100000
-batch_size = 64
+batch_size = 32

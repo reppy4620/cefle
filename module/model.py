@@ -11,10 +11,10 @@ from .layers import (
 class ScoreEstimator(hk.Module):
     def __init__(
         self,
+        marginal_prob,
         dim=64,
         dim_mults=(1, 2, 4, 8),
-        channels=3,
-        marginal_prob=None
+        channels=3
     ):
         super(ScoreEstimator, self).__init__()
         self.marginal_prob = marginal_prob
@@ -53,7 +53,5 @@ class ScoreEstimator(hk.Module):
                 x = hk.Conv2DTranspose(in_dim, kernel_shape=4, stride=2)(x)
         x = ConvNextBlock(self.dim, self.dim)(x)
         x = hk.Conv2D(self.channels, kernel_shape=1)(x)
-        if self.marginal_prob is not None:
-            # scale by sigma
-            x = x / self.marginal_prob(x, t)[1][:, None, None, None]
+        x = x / self.marginal_prob(x, t)[1][:, None, None, None]
         return x
