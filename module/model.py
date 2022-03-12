@@ -12,7 +12,7 @@ class ScoreEstimator(hk.Module):
     def __init__(
         self,
         marginal_prob,
-        dim=64,
+        dim=32,
         dim_mults=(1, 2, 4, 8),
         channels=3
     ):

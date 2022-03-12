@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 import params
 from module import ScoreEstimator, SDE, SubVPSDE
-from module.dataset import load_dataset, load_tfds
+from module.dataset import load_dataset
 
 
 def build_forward_fn(marginal_prob):
@@ -116,7 +116,6 @@ def main():
     )
 
     ds = load_dataset(args.data_dir, batch_size=params.batch_size)
-    # ds = load_cifar(batch_size=params.batch_size)
     updater = Updater(sde, net, loss_fn, opt)
 
     rng = jax.random.PRNGKey(params.seed)

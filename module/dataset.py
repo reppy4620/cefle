@@ -10,11 +10,11 @@ def load_dataset(data_dir: Union[Path, str], batch_size):
     def preprocess(path: str):
         img = tf.io.read_file(path)
         img = tf.image.decode_image(img, channels=3, expand_animations=False, dtype=tf.float32)
-        img = tf.image.resize(img, [256, 256])
+        img = tf.image.resize(img, [128, 128])
         return img
     if isinstance(data_dir, str):
         data_dir = Path(data_dir)
-    file_path_list = list(sorted(data_dir.glob('*')))[::30]
+    file_path_list = list(sorted(data_dir.glob('*')))[::15]
     file_path_list = [str(p) for p in file_path_list]
     ds = tf.data.Dataset.from_tensor_slices(file_path_list)
     ds = ds.map(preprocess, num_parallel_calls=AUTOTUNE)
